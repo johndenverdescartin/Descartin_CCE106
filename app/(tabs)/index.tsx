@@ -1,318 +1,488 @@
-import React, { useState } from 'react';
 import {
+  Pressable,
+  ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
-  ScrollView,
-  TextInput,
-  Pressable,
 } from 'react-native';
 
-export default function HomeScreen() {
-  // Information you will fill in
-  const [name, setName] = useState('');
-  const [program, setProgram] = useState('');
-  const [age, setAge] = useState('');
-  const [hobbies, setHobbies] = useState('');
-  const [bio, setBio] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+// =========================
+// METRIC CARD
+// =========================
+function MetricCard({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string;
+  icon: string;
+}) {
+  return (
+    <View style={styles.metricCard}>
+      <View style={styles.metricTop}>
+        <Text style={styles.metricIcon}>{icon}</Text>
+        <Text style={styles.metricLabel}>{label}</Text>
+      </View>
 
-  // Saved information
-  const [savedName, setSavedName] = useState('');
-  const [savedProgram, setSavedProgram] = useState('');
-  const [savedAge, setSavedAge] = useState('');
-  const [savedHobbies, setSavedHobbies] = useState('');
-  const [savedBio, setSavedBio] = useState('');
-  const [savedEmail, setSavedEmail] = useState('');
-  const [savedPhone, setSavedPhone] = useState('');
+      <Text style={styles.metricValue}>{value}</Text>
+    </View>
+  );
+}
 
-  const [message, setMessage] = useState('');
+// =========================
+// QUICK ACTION
+// =========================
+function QuickAction({
+  icon,
+  title,
+}: {
+  icon: string;
+  title: string;
+}) {
+  return (
+    <Pressable style={styles.quickAction}>
+      <View style={styles.quickIcon}>
+        <Text>{icon}</Text>
+      </View>
 
-  const handleSave = () => {
-    if (
-      name.trim() === '' ||
-      program.trim() === '' ||
-      age.trim() === ''
-    ) {
-      setMessage('Please fill in the required fields.');
-      return;
-    }
+      <Text style={styles.quickText}>{title}</Text>
+    </Pressable>
+  );
+}
 
-    setSavedName(name);
-    setSavedProgram(program);
-    setSavedAge(age);
-    setSavedHobbies(hobbies);
-    setSavedBio(bio);
-    setSavedEmail(email);
-    setSavedPhone(phone);
+// =========================
+// ACTIVITY ITEM
+// =========================
+function ActivityItem({
+  icon,
+  title,
+  date,
+  amount,
+  positive,
+}: {
+  icon: string;
+  title: string;
+  date: string;
+  amount: string;
+  positive?: boolean;
+}) {
+  return (
+    <View style={styles.activityItem}>
+      <View style={styles.activityIcon}>
+        <Text>{icon}</Text>
+      </View>
 
-    setMessage('Profile saved successfully!');
-  };
+      <View style={styles.activityDetails}>
+        <Text style={styles.activityTitle}>{title}</Text>
+        <Text style={styles.activityDate}>{date}</Text>
+      </View>
+
+      <Text
+        style={[
+          styles.activityAmount,
+          positive && styles.positiveAmount,
+        ]}
+      >
+        {amount}
+      </Text>
+    </View>
+  );
+}
+
+// =========================
+// MAIN APP
+// =========================
+export default function App() {
+  const { width } = useWindowDimensions();
+
+  const isWide = width >= 600;
 
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
-      keyboardShouldPersistTaps="handled"
+      style={styles.container}
+      contentContainerStyle={styles.content}
     >
-      <View style={styles.card}>
 
-        <Text style={styles.title}>Personal Profile</Text>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.smallGreeting}>GOOD MORNING</Text>
+          <Text style={styles.headerTitle}>My Dashboard</Text>
+        </View>
 
-        <Text style={styles.subtitle}>
-          My First Mobile App
-        </Text>
-
-        <View style={styles.line} />
-
-        {/* NAME */}
-        <Text style={styles.label}>Full Name *</Text>
-
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Enter your full name"
-          placeholderTextColor="#94A3B8"
-        />
-
-        {/* PROGRAM */}
-        <Text style={styles.label}>Program *</Text>
-
-        <TextInput
-          style={styles.input}
-          value={program}
-          onChangeText={setProgram}
-          placeholder="Enter your program"
-          placeholderTextColor="#94A3B8"
-        />
-
-        {/* AGE */}
-        <Text style={styles.label}>Age *</Text>
-
-        <TextInput
-          style={styles.input}
-          value={age}
-          onChangeText={setAge}
-          placeholder="Enter your age"
-          placeholderTextColor="#94A3B8"
-          keyboardType="numeric"
-        />
-
-        {/* HOBBIES */}
-        <Text style={styles.label}>Hobbies</Text>
-
-        <TextInput
-          style={styles.input}
-          value={hobbies}
-          onChangeText={setHobbies}
-          placeholder="Enter your hobbies"
-          placeholderTextColor="#94A3B8"
-        />
-
-        {/* BIOGRAPHY */}
-        <Text style={styles.label}>Biography</Text>
-
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          value={bio}
-          onChangeText={setBio}
-          placeholder="Write something about yourself"
-          placeholderTextColor="#94A3B8"
-          multiline
-          numberOfLines={4}
-          textAlignVertical="top"
-        />
-
-        {/* EMAIL */}
-        <Text style={styles.label}>Email</Text>
-
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Enter your email"
-          placeholderTextColor="#94A3B8"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-
-        {/* PHONE */}
-        <Text style={styles.label}>Phone Number</Text>
-
-        <TextInput
-          style={styles.input}
-          value={phone}
-          onChangeText={setPhone}
-          placeholder="Enter your phone number"
-          placeholderTextColor="#94A3B8"
-          keyboardType="phone-pad"
-        />
-
-        {/* SAVE BUTTON */}
-        <Pressable
-          style={styles.button}
-          onPress={handleSave}
-        >
-          <Text style={styles.buttonText}>
-            Save Profile
-          </Text>
+        <Pressable style={styles.profileButton}>
+          <Text style={styles.profileIcon}>JD</Text>
         </Pressable>
+      </View>
 
-        {/* MESSAGE */}
-        {message !== '' && (
-          <View style={styles.messageBox}>
-            <Text style={styles.message}>
-              {message}
-            </Text>
-          </View>
-        )}
 
-        {/* SAVED PROFILE */}
-        {savedName !== '' && (
-          <View style={styles.savedBox}>
-            <Text style={styles.savedTitle}>
-              Saved Profile
-            </Text>
+      {/* BALANCE BANNER */}
+      <View style={styles.balanceCard}>
+        <View>
+          <Text style={styles.balanceLabel}>TOTAL BALANCE</Text>
 
-            <Text style={styles.savedText}>
-              Name: {savedName}
-            </Text>
+          <Text style={styles.balanceValue}>
+            ₱24,850.00
+          </Text>
 
-            <Text style={styles.savedText}>
-              Program: {savedProgram}
-            </Text>
+          <Text style={styles.balanceChange}>
+            ↑ 8.4% from last month
+          </Text>
+        </View>
 
-            <Text style={styles.savedText}>
-              Age: {savedAge}
-            </Text>
+        <Text style={styles.balanceSymbol}>₱</Text>
+      </View>
 
-            <Text style={styles.savedText}>
-              Hobbies: {savedHobbies || 'Not provided'}
-            </Text>
 
-            <Text style={styles.savedText}>
-              Biography: {savedBio || 'Not provided'}
-            </Text>
+      {/* METRICS */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Overview</Text>
+        <Text style={styles.viewText}>This month</Text>
+      </View>
 
-            <Text style={styles.savedText}>
-              Email: {savedEmail || 'Not provided'}
-            </Text>
+      <View style={styles.metricsContainer}>
 
-            <Text style={styles.savedText}>
-              Phone: {savedPhone || 'Not provided'}
-            </Text>
-          </View>
-        )}
+        <View
+          style={[
+            styles.metricWrapper,
+            { width: isWide ? '31%' : '48%' },
+          ]}
+        >
+          <MetricCard
+            label="Income"
+            value="₱18,200"
+            icon="↗"
+          />
+        </View>
+
+        <View
+          style={[
+            styles.metricWrapper,
+            { width: isWide ? '31%' : '48%' },
+          ]}
+        >
+          <MetricCard
+            label="Expenses"
+            value="₱7,350"
+            icon="↘"
+          />
+        </View>
+
+        <View
+          style={[
+            styles.metricWrapper,
+            { width: isWide ? '31%' : '48%' },
+          ]}
+        >
+          <MetricCard
+            label="Savings"
+            value="₱10,850"
+            icon="★"
+          />
+        </View>
 
       </View>
+
+
+      {/* QUICK ACTIONS */}
+      <Text style={styles.sectionTitle}>Quick Actions</Text>
+
+      <View style={styles.quickContainer}>
+        <QuickAction icon="＋" title="Add Money" />
+        <QuickAction icon="↗" title="Transfer" />
+        <QuickAction icon="▣" title="Bills" />
+        <QuickAction icon="•••" title="More" />
+      </View>
+
+
+      {/* RECENT ACTIVITY */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Recent Activity</Text>
+
+        <Pressable>
+          <Text style={styles.viewText}>View all</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.activityContainer}>
+
+        <ActivityItem
+          icon="🛍️"
+          title="Shopping"
+          date="Today • 9:42 AM"
+          amount="-₱850"
+        />
+
+        <ActivityItem
+          icon="🍔"
+          title="Food & Dining"
+          date="Yesterday • 7:20 PM"
+          amount="-₱320"
+        />
+
+        <ActivityItem
+          icon="💵"
+          title="Allowance"
+          date="September 10 • 8:00 AM"
+          amount="+₱5,000"
+          positive
+        />
+
+        <ActivityItem
+          icon="🚕"
+          title="Transportation"
+          date="September 9 • 5:15 PM"
+          amount="-₱180"
+        />
+
+      </View>
+
     </ScrollView>
   );
 }
 
+
+// =========================
+// STYLES
+// =========================
 const styles = StyleSheet.create({
+
   container: {
-    flexGrow: 1,
-    backgroundColor: '#DCEBFF',
+    flex: 1,
+    backgroundColor: '#0F172A',
+  },
+
+  content: {
     padding: 20,
+    paddingBottom: 40,
   },
 
-  card: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 22,
-    alignSelf: 'center',
-    elevation: 5,
+
+  // HEADER
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 25,
   },
 
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1E293B',
-    textAlign: 'center',
+  smallGreeting: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 1.2,
+    color: '#94A3B8',
   },
 
-  subtitle: {
-    fontSize: 16,
-    color: '#64748B',
-    textAlign: 'center',
-    marginTop: 5,
+  headerTitle: {
+    fontSize: 27,
+    fontWeight: '700',
+    color: '#F8FAFC',
+    marginTop: 4,
   },
 
-  line: {
-    height: 1,
-    backgroundColor: '#E2E8F0',
-    marginVertical: 20,
-  },
-
-  label: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#334155',
-    marginBottom: 6,
-    marginTop: 8,
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: '#CBD5E1',
-    borderRadius: 10,
-    padding: 12,
-    fontSize: 16,
-    color: '#1E293B',
-    backgroundColor: '#F8FAFC',
-  },
-
-  textArea: {
-    height: 100,
-  },
-
-  button: {
-    backgroundColor: '#2563EB',
-    padding: 14,
-    borderRadius: 10,
-    marginTop: 20,
+  profileButton: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#14B8A6',
+    justifyContent: 'center',
     alignItems: 'center',
   },
 
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-
-  messageBox: {
-    backgroundColor: '#E0F2FE',
-    padding: 12,
-    borderRadius: 10,
-    marginTop: 12,
-  },
-
-  message: {
-    color: '#0369A1',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-
-  savedBox: {
-    backgroundColor: '#EEF6FF',
-    borderRadius: 12,
-    padding: 16,
-    marginTop: 18,
-  },
-
-  savedTitle: {
-    fontSize: 19,
-    fontWeight: 'bold',
-    color: '#2563EB',
-    marginBottom: 10,
-  },
-
-  savedText: {
+  profileIcon: {
     fontSize: 14,
-    color: '#334155',
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+
+
+  // BALANCE
+  balanceCard: {
+    backgroundColor: '#134E4A',
+    borderRadius: 20,
+    padding: 22,
+    minHeight: 155,
+
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    marginBottom: 25,
+  },
+
+  balanceLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#99F6E4',
+    letterSpacing: 1,
+  },
+
+  balanceValue: {
+    fontSize: 34,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginTop: 8,
+  },
+
+  balanceChange: {
+    fontSize: 12,
+    color: '#A7F3D0',
+    marginTop: 8,
+  },
+
+  balanceSymbol: {
+    fontSize: 65,
+    fontWeight: '800',
+    color: '#2DD4BF',
+    opacity: 0.5,
+  },
+
+
+  // SECTION
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  sectionTitle: {
+    fontSize: 19,
+    fontWeight: '700',
+    color: '#F8FAFC',
+    marginBottom: 13,
+    marginTop: 5,
+  },
+
+  viewText: {
+    fontSize: 12,
+    color: '#2DD4BF',
+    marginBottom: 13,
+  },
+
+
+  // METRICS
+  metricsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+
+  metricWrapper: {
+    marginBottom: 12,
+  },
+
+  metricCard: {
+    backgroundColor: '#1E293B',
+    borderRadius: 16,
+    padding: 16,
+    minHeight: 120,
+    justifyContent: 'space-between',
+  },
+
+  metricTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  metricIcon: {
+    fontSize: 16,
+    color: '#2DD4BF',
+    marginRight: 7,
+  },
+
+  metricLabel: {
+    fontSize: 12,
+    color: '#94A3B8',
+  },
+
+  metricValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#F8FAFC',
+  },
+
+
+  // QUICK ACTIONS
+  quickContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+
+  quickAction: {
+    alignItems: 'center',
+    width: '23%',
+  },
+
+  quickIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 15,
+    backgroundColor: '#1E293B',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 7,
   },
+
+  quickText: {
+    fontSize: 11,
+    color: '#CBD5E1',
+    textAlign: 'center',
+  },
+
+
+  // ACTIVITY
+  activityContainer: {
+    backgroundColor: '#1E293B',
+    borderRadius: 18,
+    paddingHorizontal: 15,
+  },
+
+  activityItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#334155',
+  },
+
+  activityIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 13,
+    backgroundColor: '#334155',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  activityDetails: {
+    flex: 1,
+    marginLeft: 12,
+  },
+
+  activityTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#F8FAFC',
+  },
+
+  activityDate: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginTop: 3,
+  },
+
+  activityAmount: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#F87171',
+  },
+
+  positiveAmount: {
+    color: '#2DD4BF',
+  },
+
 });
